@@ -1,21 +1,28 @@
 <template>
   <div class="recommend">
-    <div class="slider-wrapper">
-      <div class="slider-content">
-        <slider v-if="sliders.length" :sliders="sliders"></slider>
+    <scroll class="recommend-content">
+      <div>
+        <div class="slider-wrapper">
+          <div class="slider-content">
+            <slider v-if="sliders.length" :sliders="sliders"></slider>
+          </div>
+        </div>
+        <div class="recommend-list"></div>
       </div>
-    </div>
+    </scroll>
   </div>
 </template>
 
 <script>
 import { getRecommend } from '@/service/recommend.js';
 import Slider from '@/components/base/slider/slider.vue';
+import Scroll from '@/components/base/scroll/scroll.vue';
 
 export default {
   name: 'Recommend',
   components: {
-    Slider
+    Slider,
+    Scroll
   },
   data() {
     return {
