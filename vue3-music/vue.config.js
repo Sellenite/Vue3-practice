@@ -1,3 +1,5 @@
+const registerRouter = require('./backend/router')
+
 // additionalData = prependData
 module.exports = {
   css: {
@@ -12,6 +14,9 @@ module.exports = {
     }
   },
   devServer: {
+    before(app) {
+      registerRouter(app)
+    },
     port: 8416,
     open: true
   }

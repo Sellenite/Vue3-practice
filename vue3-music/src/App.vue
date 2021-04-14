@@ -1,6 +1,16 @@
 <template>
+  <tab></tab>
   <router-view/>
 </template>
+
+<script>
+import Tab from '@/components/tab/tab.vue';
+export default {
+  components: {
+    Tab
+  }
+}
+</script>
 
 <style lang="scss">
 #app {
