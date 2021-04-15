@@ -8,6 +8,10 @@ const routes = [
   {
     path: '/recommend',
     component: () => import('@/views/recommend.vue')
+  },
+  {
+    path: '/singer',
+    component: () => import('@/views/singer.vue')
   }
 ]
 

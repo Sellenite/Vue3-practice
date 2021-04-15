@@ -20,10 +20,11 @@
         default: 0
       }
     },
-    setup(props) {
+    emits: ['scroll'],
+    setup(props, { emit }) {
       // 这里的props是组件内props定义的属性，即{ click, probeType }
       const rootRef = ref(null)
-      const scroll = useScroll(rootRef, props)
+      const scroll = useScroll(rootRef, props, emit)
 
       return {
         rootRef,
