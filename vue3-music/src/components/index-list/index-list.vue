@@ -53,10 +53,13 @@
     },
     setup(props) {
       const groupRef = ref(null);
-      const { onScroll } = useFixed(groupRef, props);
+      const { onScroll, archorIndex, fixedTitle, fixedStyle } = useFixed(groupRef, props);
       return {
         groupRef,
-        onScroll
+        onScroll,
+        archorIndex,
+        fixedTitle,
+        fixedStyle
       }
     },
     methods: {
@@ -113,6 +116,7 @@
         font-size: $font-size-small;
         color: $color-text-l;
         background: $color-highlight-background;
+        text-align: left;
       }
     }
     .shortcut {

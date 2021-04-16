@@ -1,8 +1,12 @@
-import { ref, watch, nextTick } from 'vue';
+import { ref, watch, nextTick, computed } from 'vue';
 
 export default function useFixed(wrapperRef, props) {
+  const TITLE_HEIGHT = 30;
+
   const listHeights = ref([]);
-  let scrollY = ref(0);
+  const scrollY = ref(0);
+  const archorIndex = ref(0);
+  const distance = ref(0);
 
   function calculate() {
     const list = wrapperRef.value.children;
@@ -17,7 +21,7 @@ export default function useFixed(wrapperRef, props) {
   }
 
   function onScroll(pos) {
-    scrollY = -pos.y;
+    scrollY.value = -pos.y;
   }
 
   watch(() => props.data, async () => {
@@ -26,10 +30,41 @@ export default function useFixed(wrapperRef, props) {
   })
 
   watch(scrollY, (val) => {
+    for (let i = 0; i < listHeights.value.length - 1; i++) {
+      const prev = listHeights.value[i];
+      const next = listHeights.value[i + 1];
+      if (prev < val && next > val) {
+        archorIndex.value = i;
+        distance.value = next - val;
+        break;
+      }
+    }
+  })
 
+  const fixedTitle = computed(() => {
+    if (scrollY.value <= 0) {
+      return '';
+    }
+    const currentGroup = props.data[archorIndex.value];
+    return currentGroup ? currentGroup.title : '';
+  })
+
+  const fixedStyle = computed(() => {
+    let diff = 0;
+
+    if (distance.value > 0 && distance.value < TITLE_HEIGHT) {
+      diff = distance.value - TITLE_HEIGHT;
+    }
+
+    return {
+      transform: `translate3d(0, ${diff}px, 0)`
+    }
   })
 
   return {
-    onScroll
+    onScroll,
+    archorIndex,
+    fixedTitle,
+    fixedStyle
   }
 }
