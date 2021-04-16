@@ -6,7 +6,7 @@ export default function useFixed(wrapperRef, props) {
   const listHeights = ref([]);
   const scrollY = ref(0);
   const archorIndex = ref(0);
-  const distance = ref(0);
+  const distance = ref(0); // 用于处理title的推动动画
 
   function calculate() {
     const list = wrapperRef.value.children;
@@ -33,8 +33,17 @@ export default function useFixed(wrapperRef, props) {
     for (let i = 0; i < listHeights.value.length - 1; i++) {
       const prev = listHeights.value[i];
       const next = listHeights.value[i + 1];
+      // 由于使用旁边的shortcut的touch，会有边界问题
       if (prev < val && next > val) {
         archorIndex.value = i;
+        distance.value = next - val;
+        break;
+      } else if (prev === val) {
+        archorIndex.value = i;
+        distance.value = next - val;
+        break;
+      } else if (next === val) {
+        archorIndex.value = i + 1;
         distance.value = next - val;
         break;
       }
