@@ -14,6 +14,7 @@
     >
       <div
         class="play-btn-wrapper"
+        :style="playBtnStyle"
       >
         <div
           v-show="songs.length > 0"
@@ -23,12 +24,17 @@
           <span class="text">随机播放全部</span>
         </div>
       </div>
+      <div
+        class="filter"
+        :style="filterStyle"
+      ></div>
     </div>
     <scroll
       class="list"
       :style="scrollStyle"
       v-loading="loading"
       :probe-type="3"
+      @scroll="onScroll"
     >
       <div class="song-list-wrapper">
         <song-list
@@ -44,6 +50,8 @@
 <script>
   import SongList from '@/components/base/song-list/song-list'
   import Scroll from '@/components/base/scroll/scroll'
+
+  const RESERVED_HEIGHT = 40;
 
   export default {
     name: 'music-list',
@@ -69,7 +77,9 @@
     },
     data() {
       return {
-        imageHeight: 0
+        imageHeight: 0,
+        scrollY: 0,
+        maxTranslateY: 0
       }
     },
     computed: {
@@ -81,19 +91,58 @@
         }
       },
       bgImageStyle() {
+        let zIndex = 0;
+        let paddingTop = '70%';
+        let height = 0;
+        // 在iPhone里，当滚动的物件有transform的情况下，使用zIndex去决定高度的时候，会优先有translateZ作为层级高，为了兼容这个，translateZ也要设置
+        let translateZ = 0;
+        let scale = 1;
+        // 上拉遮罩
+        if (this.scrollY > this.maxTranslateY) {
+          zIndex = 10;
+          height = RESERVED_HEIGHT + 'px';
+          paddingTop = 0;
+          translateZ = 10;
+        }
+
+        // 下拉缩放
+        if (this.scrollY < 0) {
+          scale = 1 + Math.abs(this.scrollY / this.imageHeight);
+        }
+
         return {
-          paddingTop: '70%',
-          height: '40px',
+          zIndex,
+          paddingTop,
+          height,
+          transform: `scale(${scale}) translateZ(${translateZ}px)`,
           backgroundImage: `url(${this.pic})`
+        }
+      },
+      filterStyle() {
+        return {
+        }
+      },
+      playBtnStyle() {
+        let display = '';
+        if (this.scrollY > this.maxTranslateY) {
+          display = 'none';
+        }
+
+        return {
+          display
         }
       }
     },
     mounted() {
-      this.imageHeight = this.$refs.bgImage.clientHeight
+      this.imageHeight = this.$refs.bgImage.clientHeight;
+      this.maxTranslateY = this.imageHeight - RESERVED_HEIGHT;
     },
     methods: {
       goBack() {
         this.$router.back()
+      },
+      onScroll(pos) {
+        this.scrollY = -pos.y;
       },
       selectItem({ song, index }) {
 
@@ -179,7 +228,6 @@
       bottom: 0;
       width: 100%;
       z-index: 0;
-      overflow: hidden;
       .song-list-wrapper {
         padding: 20px 30px;
         background: $color-background;
