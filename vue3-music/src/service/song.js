@@ -5,15 +5,19 @@ export function processSongs(songs) {
     return Promise.resolve(songs)
   }
 
+  const arr = songs.map((song) => {
+    return song.mid
+  });
+
   return get('/api/getSongsUrl', {
-    mid: songs.map((song) => {
-      return song.mid
-    })
+    mid: encodeURIComponent(JSON.stringify(arr))
   }).then((result) => {
     const map = result.map
     return songs.map((song) => {
-      song.url = map[song.mid]
-      return song
+      return {
+        ...song,
+        url: map[song.mid]
+      }
     }).filter((song) => {
       return song.url && song.url.indexOf('vkey') > -1
     })

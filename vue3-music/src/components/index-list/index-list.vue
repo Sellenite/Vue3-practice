@@ -69,11 +69,16 @@
         }
       }
     },
-    setup(props) {
+    emits: ['select'],
+    setup(props, { emit }) {
       const groupRef = ref(null);
       const scrollRef = ref(null);
       const { onScroll, archorIndex, fixedTitle, fixedStyle } = useFixed(groupRef, props);
       const { shortcutList, onShortcutTouchStart, onShortcutTouchMove } = useShortcut(groupRef, scrollRef, props);
+
+      function onItemClick(item) {
+        emit('select', item);
+      }
 
       return {
         groupRef,
@@ -84,12 +89,8 @@
         fixedStyle,
         shortcutList,
         onShortcutTouchStart,
-        onShortcutTouchMove
-      }
-    },
-    methods: {
-      onItemClick(item) {
-
+        onShortcutTouchMove,
+        onItemClick
       }
     }
   }
@@ -111,7 +112,6 @@
         font-size: $font-size-small;
         color: $color-text-l;
         background: $color-highlight-background;
-        text-align: left;
       }
       .item {
         display: flex;
@@ -141,7 +141,6 @@
         font-size: $font-size-small;
         color: $color-text-l;
         background: $color-highlight-background;
-        text-align: left;
       }
     }
     .shortcut {

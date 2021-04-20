@@ -1,6 +1,7 @@
 <template>
   <div class="singer">
-    <index-list :data="singers"></index-list>
+    <index-list :data="singers" @select="handleSelectItem"></index-list>
+    <router-view :singer="selectedSinger"></router-view>
   </div>
 </template>
 
@@ -15,7 +16,8 @@
     },
     data() {
       return {
-        singers: []
+        singers: [],
+        selectedSinger: {}
       }
     },
     async created() {
@@ -23,7 +25,12 @@
       this.singers = result.singers;
     },
     methods: {
-
+      handleSelectItem(item) {
+        this.selectedSinger = item;
+        this.$router.push({
+          path: `/singer/${item.mid}`
+        })
+      }
     }
   }
 </script>
