@@ -8,13 +8,13 @@
   import MusicList from '@/components/music-list/music-list.vue';
   import { getSingerDetail } from '@/service/singer.js';
   import { processSongs } from '@/service/song.js';
+  import storage from 'good-storage';
+  import { SINGER_KEY } from '@/assets/js/constant';
+
   export default {
     name: 'singer-detail',
     props: {
-      singer: {
-        type: Object,
-        default: () => {}
-      }
+      singer: Object
     },
     data() {
       return {
@@ -24,8 +24,30 @@
     components: {
       MusicList
     },
+    computed: {
+      computedSinger() {
+        let ret = null;
+        if (this.singer.mid) {
+          ret = this.singer;
+        } else {
+          const cache = storage.session.get(SINGER_KEY);
+          if (cache && cache.mid === this.$route.params.mid) {
+            ret = cache;
+          }
+        }
+        return ret;
+      }
+    },
     async created() {
-      const result = await getSingerDetail(this.singer);
+      if (!this.computedSinger) {
+        // 找到一级路由
+        const path = this.$route.matched[0].path;
+        this.$router.push({
+          path
+        });
+        return
+      }
+      const result = await getSingerDetail(this.computedSinger);
       this.songs = await processSongs(result.songs);
     }
   }

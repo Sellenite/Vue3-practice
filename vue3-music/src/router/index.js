@@ -14,7 +14,7 @@ const routes = [
     component: () => import('@/views/singer.vue'),
     children: [
       {
-        path: ':id',
+        path: ':mid',
         component: () => import('@/views/singer-detail.vue')
       }
     ]
