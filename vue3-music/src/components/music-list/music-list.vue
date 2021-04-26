@@ -51,7 +51,7 @@
   import SongList from '@/components/base/song-list/song-list'
   import Scroll from '@/components/base/scroll/scroll'
 
-  const RESERVED_HEIGHT = 40;
+  const RESERVED_HEIGHT = 40; // 标题栏的那个高度
 
   export default {
     name: 'music-list',
@@ -79,7 +79,7 @@
       return {
         imageHeight: 0,
         scrollY: 0,
-        maxTranslateY: 0
+        maxTranslateY: 0 // 向上滑动最大的距离，超出这个距离就会消除一些动效等，用作分界线处理
       }
     },
     computed: {
@@ -119,7 +119,14 @@
         }
       },
       filterStyle() {
+        let blur = 0;
+        // 上滑的时候才进行模糊
+        if (this.scrollY > 0) {
+          // 两个高度相除得出比例再乘以一个系数
+          blur = Math.min(this.maxTranslateY / this.imageHeight, this.scrollY / this.imageHeight) * 20;
+        }
         return {
+          backdropFilter: `blur(${blur}px)`
         }
       },
       playBtnStyle() {
