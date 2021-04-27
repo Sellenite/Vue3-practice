@@ -25,6 +25,7 @@
       MusicList
     },
     computed: {
+      // 使用缓存，避免刷新后内存对象消失
       computedSinger() {
         let ret = null;
         if (this.singer.mid) {
@@ -39,6 +40,7 @@
       }
     },
     async created() {
+      // 防止用户在详情页面直接改路由
       if (!this.computedSinger) {
         // 找到一级路由
         const path = this.$route.matched[0].path;

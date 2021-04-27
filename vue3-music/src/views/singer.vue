@@ -1,7 +1,9 @@
 <template>
   <div class="singer">
     <index-list :data="singers" @select="handleSelectItem"></index-list>
-    <router-view :singer="selectedSinger"></router-view>
+    <transition name="slide">
+      <router-view :singer="selectedSinger"></router-view>
+    </transition>
   </div>
 </template>
 
