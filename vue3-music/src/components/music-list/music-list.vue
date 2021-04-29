@@ -50,6 +50,7 @@
 <script>
   import SongList from '@/components/base/song-list/song-list'
   import Scroll from '@/components/base/scroll/scroll'
+  import { mapActions } from 'vuex'
 
   const RESERVED_HEIGHT = 40; // 标题栏的那个高度
 
@@ -145,6 +146,9 @@
       this.maxTranslateY = this.imageHeight - RESERVED_HEIGHT;
     },
     methods: {
+      ...mapActions([
+        'selectPlay'
+      ]),
       goBack() {
         this.$router.back()
       },
@@ -152,7 +156,10 @@
         this.scrollY = -pos.y;
       },
       selectItem({ song, index }) {
-
+        this.selectPlay({
+          list: this.songs,
+          index
+        })
       }
     }
   }
