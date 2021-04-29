@@ -1,9 +1,13 @@
 <template>
   <div class="singer">
     <index-list :data="singers" @select="handleSelectItem"></index-list>
-    <transition name="slide">
-      <router-view :singer="selectedSinger"></router-view>
-    </transition>
+    <!--  <router-view> can no longer be used directly inside <transition> or <keep-alive>. Use slot props instead: -->
+    <!-- 3.0对路由组件进行动画设定新写法 -->
+    <router-view :singer="selectedSinger" v-slot="{ Component }">
+      <transition name="slide">
+        <component :is="Component"></component>
+      </transition>
+    </router-view>
   </div>
 </template>
 
