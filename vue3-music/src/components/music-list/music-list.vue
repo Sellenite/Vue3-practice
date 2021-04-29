@@ -21,7 +21,7 @@
           class="play-btn"
         >
           <i class="icon-play"></i>
-          <span class="text">随机播放全部</span>
+          <span class="text" @click="handleClickRandom">随机播放全部</span>
         </div>
       </div>
       <div
@@ -147,7 +147,8 @@
     },
     methods: {
       ...mapActions([
-        'selectPlay'
+        'selectPlay',
+        'randomPlay'
       ]),
       goBack() {
         this.$router.back()
@@ -159,6 +160,11 @@
         this.selectPlay({
           list: this.songs,
           index
+        })
+      },
+      handleClickRandom() {
+        this.randomPlay({
+          list: this.songs
         })
       }
     }
